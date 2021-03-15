@@ -5,6 +5,7 @@ const int N = 2e4 + 5;
 
 int w[N] , d[N] , sumw[N] , sumd[N] , c[N] , f[N];
 deque<int> q;
+int cur1 , cur2;
 
 int cost(int j , int i)
 {
@@ -54,10 +55,10 @@ int main()
     q.push_back(1);
     for (int i = 2 ; i <= n ; ++i)
     {
-        int cur1 = 0 , cur2 = 0;
+        // 1st step
+        cur1 = cur2 = 0;
         // cur1 < cur2
 
-        // 1st step
         if (!q.empty()) cur1 = q.front();
         q.pop_front();
         if (!q.empty()) cur2 = q.front();
