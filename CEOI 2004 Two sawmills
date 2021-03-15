@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 2e4 + 5;
+
+int w[N] , d[N] , sumw[N] , sumd[N] , c[N] , f[N];
+deque<int> q;
+
+int cost(int j , int i)
+{
+    return c[i] - c[j] - sumw[j] * (sumd[i] - sumd[j]);
+}
+
+double cal(int j , int i)
+{
+    return (sumw[j] * sumd[j] - sumw[i] * sumd[i]) / (sumw[j] - sumw[i]);
+}
+
+int main()
+{
+    // freopen(".inp","r",stdin);
+    // freopen(".out","w",stdout);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n;
+    cin >> n;
+    for (int i = 1 ; i <= n ; ++i) cin >> w[i] >> d[i];
+    w[n + 1] = d[n + 1] = 0;
+
+    for (int i = 1 ; i <= n + 1 ; ++i) sumw[i] = sumw[i - 1] + w[i];
+    for (int i = 2 ; i <= n + 1 ; ++i) sumd[i] = sumd[i - 1] + d[i - 1];
+    for (int i = 2 ; i <= n + 1 ; ++i) c[i] = c[i - 1] + sumw[i - 1] * d[i - 1];
+
+    // trivial implementation
+    /*
+    for (int i = 1 ; i <= n ; ++i)
+    {
+        f[i] = 2e9;
+        for (int j = 1 ; j <= i - 1 ; ++j)
+        {
+            f[i] = min(f[i] , c[j] + cost(j , i) + cost(i , n + 1));
+        }
+    }
+
+    int ans = 2e9;
+    for (int i = 1 ; i <= n ; ++i) ans = min(ans , f[i]);
+    cout << ans;
+    */
+
+    // applying monotocity and deque
+
+    q.push_back(1);
+    for (int i = 2 ; i <= n ; ++i)
+    {
+        int cur1 = 0 , cur2 = 0;
+        // cur1 < cur2
+
+        // 1st step
+        if (!q.empty()) cur1 = q.front();
+        q.pop_front();
+        if (!q.empty()) cur2 = q.front();
+
+        while(cur1 != 0 && cur2 != 0 && cur1 != cur2 && cal(cur1 , cur2) < (double) sumd[i])
+        {
+            cur1 = cur2;
+            q.pop_front();
+            if (q.empty()) break;
+            cur2 = q.front();
+        }
+
+        if (cur1 != 0) q.push_front(cur1);
+
+        // 2nd step
+        f[i] = c[q.front()] + cost(q.front() , i) + cost(i , n + 1);
+
+        // 3rd step
+
+        cur1 = cur2 = 0;
+        // cur2 < cur1
+
+        if (!q.empty()) cur1 = q.back();
+        q.pop_back();
+        if (!q.empty()) cur2 = q.back();
+
+        while(cur1 != 0 && cur2 != 0 && cur1 != cur2 && cal(cur2 , cur1) > cal(cur1 , i))
+        {
+            cur1 = cur2;
+            q.pop_back();
+            if (q.empty()) break;
+            cur2 = q.back();
+        }
+
+        if (cur1 != 0) q.push_back(cur1);
+
+        q.push_back(i);
+
+    }
+
+    int ans = 2e9;
+    for (int i = 2 ; i <= n ; ++i) ans = min(ans , f[i]);
+    cout << ans;
+
+}
