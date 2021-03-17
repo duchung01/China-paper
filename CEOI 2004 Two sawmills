@@ -19,8 +19,6 @@ double cal(int j , int i)
 
 int main()
 {
-    // freopen(".inp","r",stdin);
-    // freopen(".out","w",stdout);
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
@@ -57,7 +55,7 @@ int main()
     {
         // 1st step
         cur1 = cur2 = 0;
-        // cur1 < cur2
+        // phan tu dau tien la cur1, phan tu thu hai la cur2
 
         if (!q.empty()) cur1 = q.front();
         q.pop_front();
@@ -79,7 +77,7 @@ int main()
         // 3rd step
 
         cur1 = cur2 = 0;
-        // cur2 < cur1
+        // phan tu cuoi cung la cur1, phan tu truoc do la cur2
 
         if (!q.empty()) cur1 = q.back();
         q.pop_back();
